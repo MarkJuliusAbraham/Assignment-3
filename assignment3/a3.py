@@ -4,6 +4,7 @@
 
 import sys
 import random
+import os
 
 class CommandInterface:
 
@@ -22,6 +23,7 @@ class CommandInterface:
         }
         self.board = [[None]]
         self.player = 1
+        self.patterns = {}
     
     #===============================================================================================
     # VVVVVVVVVV START of PREDEFINED FUNCTIONS. DO NOT MODIFY. VVVVVVVVVV
@@ -266,15 +268,101 @@ class CommandInterface:
     
     # new function to be implemented for assignment 3
     def loadpatterns(self, args):
-        raise NotImplementedError("This command is not yet implemented.")
+        # raise NotImplementedError("This command is not yet implemented.")
+        self.loadpatternsEY(args)
+        # script_directory = os.path.dirname(os.path.abspath(__file__))
+        # with open(script_directory+"/twopattern.txt",'r') as file:
+        #     print(script_directory+"/twopattern.txt")
+        return True
+    def loadpatternsEY (self, args) :
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        filename = script_directory+"/"+args[0]
+        self.patterns.clear()
+        with open(filename, 'r') as file:
+            for line in file:
+                line = line.strip()
+                if not line or line.startswith ("#"):
+                    continue # Skip empty lines and comments
+                parts = line.split()
+                pattern = parts[0]
+                move = int (parts [1])
+                weight = int(parts [2])
+                if pattern not in self.patterns:
+                    self.patterns[pattern] = {}
+                self.patterns[pattern][move]= weight
+        print(self.patterns)
         return True
     
     # new function to be implemented for assignment 3
     def policy_moves(self, args):
-        raise NotImplementedError("This command is not yet implemented.")
+        
+        self.policy_movesMark(args)
         return True
+
+    def policy_movesEY(self, args):
+        print(self.get_legal_moves())
+
+    def policy_movesMark(self, args):
+
+        legal_moves = self.get_legal_moves()
+        for legal_move in legal_moves:
+            x_axis = int(legal_move[0])
+            y_axis = int(legal_move[1])  
+
+            self.make_pattern(x_axis,y_axis,0)
+                #record the pattern
+            self.make_pattern(x_axis,y_axis,0)
+                #record the pattern
+
+            #flipping
+            #check if pattern and its axis-counterparts are in self.patterns
     
-    #===============================================================================================
+
+
+    def make_pattern(self,x_axis,y_axis,boolean):
+        """
+            if boolean is 0, return the row pattern
+            if boolean is 1, return the column pattern
+        """
+        if(boolean == 1):
+            temp = x_axis
+            x_axis = y_axis
+            y_axis = temp
+
+        five_pattern = ""
+
+        for i in range(2):
+            current_x = x_axis-2+i
+            if((current_x)<0):
+                five_pattern = five_pattern+"X"
+            else:
+                
+                if(boolean):
+                    item = self.board[y_axis][current_x]
+                else:
+                    item = self.board[current_x][y_axis]
+
+                if (item == None):
+                    item = '.'
+                five_pattern = five_pattern+str(item)
+        five_pattern = five_pattern + "."
+
+        for i in range(2):
+            current_x = x_axis+(i+1)
+            if((current_x)>=len(self.board[0])):
+                five_pattern = five_pattern+"X"
+            else:
+                if(boolean):
+                    item = self.board[y_axis][current_x]
+                else:
+                    item = self.board[current_x][y_axis]
+
+                if (item == None):
+                    item = '.'
+                five_pattern = five_pattern+str(item)
+
+        return five_pattern
+    #======================================================================================s=========
     # ɅɅɅɅɅɅɅɅɅɅ END OF ASSIGNMENT 3 FUNCTIONS. ɅɅɅɅɅɅɅɅɅɅ
     #===============================================================================================
     
