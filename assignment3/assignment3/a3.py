@@ -271,9 +271,13 @@ class CommandInterface:
     
     # new function to be implemented for assignment 3
     def policy_moves(self, args):
-        raise NotImplementedError("This command is not yet implemented.")
+        self.policy_movesMark(args )
+        
         return True
     
+    def policy_movesMark(self,args):
+        print(self.get_legal_moves())
+
     #===============================================================================================
     # ɅɅɅɅɅɅɅɅɅɅ END OF ASSIGNMENT 3 FUNCTIONS. ɅɅɅɅɅɅɅɅɅɅ
     #===============================================================================================
