@@ -4,6 +4,7 @@
 
 import sys
 import random
+import os
 
 class CommandInterface:
 
@@ -22,6 +23,7 @@ class CommandInterface:
         }
         self.board = [[None]]
         self.player = 1
+        self.patterns = {}
     
     #===============================================================================================
     # VVVVVVVVVV START of PREDEFINED FUNCTIONS. DO NOT MODIFY. VVVVVVVVVV
@@ -266,15 +268,40 @@ class CommandInterface:
     
     # new function to be implemented for assignment 3
     def loadpatterns(self, args):
-        raise NotImplementedError("This command is not yet implemented.")
+        # raise NotImplementedError("This command is not yet implemented.")
+        self.loadpatternsEY(args)
+        # script_directory = os.path.dirname(os.path.abspath(__file__))
+        # with open(script_directory+"/twopattern.txt",'r') as file:
+        #     print(script_directory+"/twopattern.txt")
+        return True
+    def loadpatternsEY (self, args) :
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        filename = script_directory+"/"+args[0]
+        self.patterns.clear()
+        with open(filename, 'r') as file:
+            for line in file:
+                line = line.strip()
+                if not line or line.startswith ("#"):
+                    continue # Skip empty lines and comments
+                parts = line.split()
+                pattern = parts[0]
+                move = int (parts [1])
+                weight = int(parts [2])
+                if pattern not in self.patterns:
+                    self.patterns[pattern] = {}
+                self.patterns[pattern][move]= weight
+        print(self.patterns)
         return True
     
     # new function to be implemented for assignment 3
     def policy_moves(self, args):
-        raise NotImplementedError("This command is not yet implemented.")
+        
+        self.policy_movesEY(args)
         return True
-    
-    #===============================================================================================
+    def policy_movesEY(self, args):
+        print(self.get_legal_moves())
+
+    #======================================================================================s=========
     # ɅɅɅɅɅɅɅɅɅɅ END OF ASSIGNMENT 3 FUNCTIONS. ɅɅɅɅɅɅɅɅɅɅ
     #===============================================================================================
     
