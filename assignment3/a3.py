@@ -317,17 +317,13 @@ class CommandInterface:
             move = int(legal_move[2])
 
             row_pattern = self.make_pattern(x_axis,y_axis,0)
-            print("Row Pattern: " + row_pattern)
 
             column_pattern = self.make_pattern(x_axis,y_axis,1)
-            print("Column Pattern: " + column_pattern)
 
             row_flipped = row_pattern[::-1]
             column_flipped = column_pattern[::-1]
             
-            print("ROW: {} AND FLIPPED {}: ".format(row_pattern,row_flipped))
-            print("COLUMN: {} AND FLIPPED {}: ".format(column_pattern,column_flipped))
-
+            
             #check if pattern and its axis-counterparts are in self.patterns
 
 
@@ -362,12 +358,11 @@ class CommandInterface:
             unratioed_moves.append(unratioed_item)
 
         for item in unratioed_moves:
-            new_item = [item[0],item[1],item[2],item[3]/sum_of_all_weights]
+            new_item = [item[0],item[1],item[2],round((item[3]/sum_of_all_weights),3)]
             ratioed_moves.append(new_item)
-
-        print(unratioed_moves)
-        print(ratioed_moves)
-
+        for i in ratioed_moves:
+            print(' '.join(map(str,i)),end = ' ')
+        print("")
     def make_pattern(self,x_axis,y_axis,boolean):
         """
             if boolean is 0, return the row pattern
