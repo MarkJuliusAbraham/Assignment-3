@@ -306,6 +306,13 @@ class CommandInterface:
 
         legal_moves = sorted(self.get_legal_moves(), key=lambda x: (x[0], x[1], x[2]))
 
+        
+
+        unratioed_moves = []
+        ratioed_moves = []
+        sum_of_all_weights = 0
+
+
         for legal_move in legal_moves:
             x_axis = int(legal_move[0])
             y_axis = int(legal_move[1])
@@ -332,17 +339,36 @@ class CommandInterface:
 
             total_weight = 0
 
+            # when pattern is not in self.patterns, give a default of 10
+            hit = False
+            default = 10
             for item in row:
                 if(item in self.patterns):
                     total_weight += self.patterns[item][move]
-            
+                    hit=True
+
+            if(not hit):
+                total_weight += default
+
+            hit = False
             for item in column:
                 if(item in self.patterns):
                     total_weight += self.patterns[item][move]
+                    hit=True
+                    
+            if(not hit):
+                total_weight += default
 
-            final = [x_axis, y_axis, move, total_weight]
-            
-            print(final)            
+            unratioed_item = [x_axis, y_axis, move, total_weight]
+            sum_of_all_weights += total_weight
+            unratioed_moves.append(unratioed_item)
+
+        for item in unratioed_moves:
+            new_item = [item[0],item[1],item[2],item[3]/sum_of_all_weights]
+            ratioed_moves.append(new_item)
+
+        print(unratioed_moves)
+        print(ratioed_moves)
 
     def make_pattern(self,x_axis,y_axis,boolean):
         """
