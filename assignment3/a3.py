@@ -304,26 +304,34 @@ class CommandInterface:
 
     def policy_movesMark(self, args):
 
-        legal_moves = self.get_legal_moves()
+        legal_moves = sorted(self.get_legal_moves(), key=lambda x: (x[0], x[1], x[2]))
+
         for legal_move in legal_moves:
             x_axis = int(legal_move[0])
             y_axis = int(legal_move[1])  
 
-            self.make_pattern(x_axis,y_axis,0)
-                #record the pattern
-            self.make_pattern(x_axis,y_axis,0)
-                #record the pattern
+            row_pattern = self.make_pattern(x_axis,y_axis,0)
+            print("Row Pattern: " + row_pattern)
 
-            #flipping
+            column_pattern = self.make_pattern(x_axis,y_axis,1)
+            print("Column Pattern: " + column_pattern)
+
+            row_flipped = row_pattern[::-1]
+            column_flipped = column_pattern[::-1]
+            
+            print("ROW: {} AND FLIPPED {}: ".format(row_pattern,row_flipped))
+            print("COLUMN: {} AND FLIPPED {}: ".format(column_pattern,column_flipped))
+
             #check if pattern and its axis-counterparts are in self.patterns
-    
-
+        
+            
 
     def make_pattern(self,x_axis,y_axis,boolean):
         """
             if boolean is 0, return the row pattern
             if boolean is 1, return the column pattern
         """
+
         if(boolean == 1):
             temp = x_axis
             x_axis = y_axis
@@ -331,6 +339,7 @@ class CommandInterface:
 
         five_pattern = ""
 
+        #left or up side of the pattern
         for i in range(2):
             current_x = x_axis-2+i
             if((current_x)<0):
@@ -338,24 +347,26 @@ class CommandInterface:
             else:
                 
                 if(boolean):
-                    item = self.board[y_axis][current_x]
-                else:
                     item = self.board[current_x][y_axis]
+                else:
+                    item = self.board[y_axis][current_x]
 
                 if (item == None):
                     item = '.'
                 five_pattern = five_pattern+str(item)
         five_pattern = five_pattern + "."
 
+        #right or down side of the pattern
         for i in range(2):
             current_x = x_axis+(i+1)
             if((current_x)>=len(self.board[0])):
                 five_pattern = five_pattern+"X"
             else:
+
                 if(boolean):
-                    item = self.board[y_axis][current_x]
-                else:
                     item = self.board[current_x][y_axis]
+                else:
+                    item = self.board[y_axis][current_x]
 
                 if (item == None):
                     item = '.'
