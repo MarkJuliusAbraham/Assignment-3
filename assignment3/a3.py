@@ -296,11 +296,129 @@ class CommandInterface:
     # new function to be implemented for assignment 3
     def policy_moves(self, args):
         
-        self.policy_movesEY(args)
+        self.policy_movesMark(args)
         return True
+
     def policy_movesEY(self, args):
         print(self.get_legal_moves())
 
+    def policy_movesMark(self, args):
+
+        legal_moves = sorted(self.get_legal_moves(), key=lambda x: (x[0], x[1], x[2]))        
+
+        unratioed_moves = []
+        ratioed_moves = []
+        sum_of_all_weights = 0
+
+
+        for legal_move in legal_moves:
+            x_axis = int(legal_move[0])
+            y_axis = int(legal_move[1])
+            move = int(legal_move[2])
+
+            row_pattern = self.make_pattern(x_axis,y_axis,0)
+            print("Row Pattern: " + row_pattern)
+
+            column_pattern = self.make_pattern(x_axis,y_axis,1)
+            print("Column Pattern: " + column_pattern)
+
+            row_flipped = row_pattern[::-1]
+            column_flipped = column_pattern[::-1]
+            
+            print("ROW: {} AND FLIPPED {}: ".format(row_pattern,row_flipped))
+            print("COLUMN: {} AND FLIPPED {}: ".format(column_pattern,column_flipped))
+
+            #check if pattern and its axis-counterparts are in self.patterns
+
+
+            move
+            row = [row_pattern, row_flipped]
+            column = [column_pattern, column_flipped]
+
+            total_weight = 0
+
+            # when pattern is not in self.patterns, give a default of 10
+            hit = False
+            default = 10
+            for item in row:
+                if(item in self.patterns):
+                    total_weight += self.patterns[item][move]
+                    hit=True
+
+            if(not hit):
+                total_weight += default
+
+            hit = False
+            for item in column:
+                if(item in self.patterns):
+                    total_weight += self.patterns[item][move]
+                    hit=True
+                    
+            if(not hit):
+                total_weight += default
+
+            unratioed_item = [x_axis, y_axis, move, total_weight]
+            sum_of_all_weights += total_weight
+            unratioed_moves.append(unratioed_item)
+
+        for item in unratioed_moves:
+            new_item = [item[0],item[1],item[2],item[3]/sum_of_all_weights]
+            ratioed_moves.append(new_item)
+
+        print(unratioed_moves)
+        print(ratioed_moves)
+
+    def make_pattern(self,x_axis,y_axis,boolean):
+        """
+            if boolean is 0, return the row pattern
+            if boolean is 1, return the column pattern
+        """
+
+        if(boolean == 1):
+            temp = x_axis
+            x_axis = y_axis
+            y_axis = temp
+
+        five_pattern = ""
+
+        #left or up side of the pattern even when its not square
+        for i in range(2):
+            current_x = x_axis-2+i
+            if((current_x)<0):
+                five_pattern = five_pattern+"X"
+            else:
+                
+                if(boolean):
+                    item = self.board[current_x][y_axis]
+                else:
+                    item = self.board[y_axis][current_x]
+
+                if (item == None):
+                    item = '.'
+                five_pattern = five_pattern+str(item)
+        five_pattern = five_pattern + "."
+
+        #right or down side of the pattern
+        if boolean == 0:
+            limit = len(self.board[0])
+        else:
+            limit = len(self.board)
+        for i in range(2):
+            current_x = x_axis+(i+1)
+            if((current_x)>=limit):
+                five_pattern = five_pattern+"X"
+            else:
+
+                if(boolean):
+                    item = self.board[current_x][y_axis]
+                else:
+                    item = self.board[y_axis][current_x]
+
+                if (item == None):
+                    item = '.'
+                five_pattern = five_pattern+str(item)
+
+        return five_pattern
     #======================================================================================s=========
     # ɅɅɅɅɅɅɅɅɅɅ END OF ASSIGNMENT 3 FUNCTIONS. ɅɅɅɅɅɅɅɅɅɅ
     #===============================================================================================
