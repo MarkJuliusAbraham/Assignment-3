@@ -308,7 +308,8 @@ class CommandInterface:
 
         for legal_move in legal_moves:
             x_axis = int(legal_move[0])
-            y_axis = int(legal_move[1])  
+            y_axis = int(legal_move[1])
+            move = int(legal_move[2])
 
             row_pattern = self.make_pattern(x_axis,y_axis,0)
             print("Row Pattern: " + row_pattern)
@@ -323,8 +324,25 @@ class CommandInterface:
             print("COLUMN: {} AND FLIPPED {}: ".format(column_pattern,column_flipped))
 
             #check if pattern and its axis-counterparts are in self.patterns
-        
+
+
+            move
+            row = [row_pattern, row_flipped]
+            column = [column_pattern, column_flipped]
+
+            total_weight = 0
+
+            for item in row:
+                if(item in self.patterns):
+                    total_weight += self.patterns[item][move]
             
+            for item in column:
+                if(item in self.patterns):
+                    total_weight += self.patterns[item][move]
+
+            final = [x_axis, y_axis, move, total_weight]
+            
+            print(final)            
 
     def make_pattern(self,x_axis,y_axis,boolean):
         """
