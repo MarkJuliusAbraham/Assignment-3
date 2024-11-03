@@ -360,9 +360,8 @@ class CommandInterface:
         for item in unratioed_moves:
             new_item = [item[0],item[1],item[2],round((item[3]/sum_of_all_weights),3)]
             ratioed_moves.append(new_item)
-        for i in ratioed_moves:
-            print(' '.join(map(str,i)),end = ' ')
-        print("")
+        output = ' '.join(' '.join(map(str, i)) for i in ratioed_moves)
+        print(output)
     def make_pattern(self,x_axis,y_axis,boolean):
         """
             if boolean is 0, return the row pattern
